@@ -392,4 +392,40 @@ public class stopwatchScript : MonoBehaviour
             }
         }
     }
+
+    #pragma warning disable 414
+    private string TwitchHelpMessage = "Start the stopwatch using !{0} start. Get the current number of seconds using !{0} time. Stop at a specific number of seconds using !{0} stop at <seconds>.";
+    #pragma warning restore 414
+
+	IEnumerator ProcessTwitchCommand(string command)
+	{
+		string[] split = command.ToLowerInvariant().Replace("stop at ", "stop ").Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+
+		if (split.Length == 1 && (split[0] == "go" || split[0] == "start") && !clockOn)
+		{
+			yield return null;
+			startButton.OnInteract();
+			yield return new WaitForSeconds(0.1f);
+		}
+		else if (clockOn)
+		{
+			if (split.Length == 1 && (split[0] == "time" || split[0] == "seconds"))
+			{
+				int seconds = Mathf.FloorToInt(totalElapsedTime) % 60;
+				yield return string.Format("sendtochat There is currently {0} second{1} on the stopwatch.", seconds, seconds == 1 ? "" : "s");
+			}
+			else if (split.Length == 2 && split[0] == "stop")
+			{
+				int seconds;
+				if (int.TryParse(split[1], out seconds))
+				{
+					yield return null;
+					yield return "trycancel";
+					yield return new WaitUntil(() => Mathf.FloorToInt(totalElapsedTime) % 60 == seconds);
+					startButton.OnInteract();
+					yield return new WaitForSeconds(0.1f);
+				}
+			}
+		}
+	}
 }
