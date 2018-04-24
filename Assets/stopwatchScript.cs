@@ -420,8 +420,8 @@ public class stopwatchScript : MonoBehaviour
 				if (int.TryParse(split[1], out seconds))
 				{
 					yield return null;
-					yield return "trycancel";
-					yield return new WaitUntil(() => Mathf.FloorToInt(totalElapsedTime) % 60 == seconds);
+					while (Mathf.FloorToInt(totalElapsedTime) % 60 != seconds) yield return "trycancel Stopwatch wasn't stopped due to request to cancel.";
+
 					startButton.OnInteract();
 					yield return new WaitForSeconds(0.1f);
 				}
