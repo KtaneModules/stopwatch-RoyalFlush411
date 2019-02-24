@@ -398,7 +398,7 @@ public class stopwatchScript : MonoBehaviour
     }
 
     #pragma warning disable 414
-    private string TwitchHelpMessage = "Start the stopwatch using !{0} start. Get the current number of seconds using !{0} time. Stop at a specific number of seconds using !{0} stop at <seconds>.";
+    private string TwitchHelpMessage = "Start the stopwatch using !{0} start. Get the current number of seconds on the stopwatch using !{0} time. Stop at a number of seconds on the stopwatch using !{0} stop at <seconds>. Seconds must be between 0-59.";
     #pragma warning restore 414
 
 	IEnumerator ProcessTwitchCommand(string command)
@@ -421,7 +421,7 @@ public class stopwatchScript : MonoBehaviour
 			else if (split.Length == 2 && split[0] == "stop")
 			{
 				int seconds;
-				if (int.TryParse(split[1], out seconds))
+				if (int.TryParse(split[1], out seconds) && seconds >= 0 && seconds <= 59)
 				{
 					yield return null;
 					while (Mathf.FloorToInt(totalElapsedTime) % 60 != seconds) yield return "trycancel Stopwatch wasn't stopped due to request to cancel.";
