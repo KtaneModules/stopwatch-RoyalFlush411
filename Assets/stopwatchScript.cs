@@ -353,7 +353,7 @@ public class stopwatchScript : MonoBehaviour
     public void OnstartButton()
     {
         Audio.PlaySoundAtTransform("click", transform);
-
+        GetComponent<KMSelectable>().AddInteractionPunch();
         if (buttonLock == true)
         {
             return;
@@ -370,6 +370,10 @@ public class stopwatchScript : MonoBehaviour
         }
         else if (clockOn)
         {
+            if (Mathf.FloorToInt(totalElapsedTime) == 0)
+            {
+                return;
+            }
             startTime = Bomb.GetFormattedTime();
             startTimeDisplay.text = startTime;
             startTimeDisplay.color = red;
